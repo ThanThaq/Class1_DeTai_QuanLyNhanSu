@@ -12,7 +12,9 @@ import model.position;
 import dao.bonusDAO;
 import model.bonus;
 
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class adminAccount {
@@ -323,9 +325,22 @@ public class adminAccount {
         for (int i = 0; i < departmentList.size(); i++) {
             System.out.printf("%-20s %-20s \n", departmentList.get(i).getDepartment_id(), departmentList.get(i).getDepartment_name());
         }
-        // Tam thoi nhap chinh xac
         System.out.print("\tCập nhật mã phòng ban: ");
-        staff.setDepartment_id(in.nextLine());
+        String finalDepartmentName = "";
+        boolean flag = false;
+        while (!flag){
+             String departmentName = in.nextLine();
+            finalDepartmentName = departmentName;
+            Optional<department> result = departmentList.stream().filter(department -> {
+               return department.getDepartment_id().equalsIgnoreCase(departmentName);
+            }).findAny();
+            if(result.isPresent()){
+                flag  = true;
+            }else {
+                System.out.println(" Mã phòng ban nhập không hợp lệ");
+            }
+        }
+        staff.setDepartment_id(finalDepartmentName);
         System.out.print("\tCập nhật trạng thái đi làm: ");
         System.out.println("\n\t\t0-Đã nghỉ");
         System.out.println("\t\t1-Đang đi làm");
@@ -374,9 +389,22 @@ public class adminAccount {
         for (int i = 0; i < positionList.size(); i++) {
             System.out.printf("%-20s %-20s %-30d\n", positionList.get(i).getPosition_id(), positionList.get(i).getPosition_name(), positionList.get(i).getPosition_salary());
         }
-        // Tam thoi nhap chinh xac
         System.out.print("\tNhập mã chức danh: ");
-        staff.setPosition_id(in.nextLine());
+        String finalPosittionId = "";
+        boolean flag = false;
+        while (!flag){
+            String PosittionId = in.nextLine();
+            finalPosittionId = PosittionId;
+            Optional<position> result = positionList.stream().filter(position -> {
+                return position.getPosition_id().equalsIgnoreCase(PosittionId);
+            }).findAny();
+            if(result.isPresent()){
+                flag  = true;
+            }else {
+                System.out.println(" Mã phòng ban nhập không hợp lệ");
+            }
+        }
+        staff.setPosition_id(finalPosittionId);
         staffDAO.updatePosition(staff,id);
         //In ra
         System.out.println("Thông tin nhân viên vừa cập nhật:");
@@ -561,7 +589,7 @@ public class adminAccount {
     }
 
     // Tính thuế - Quản lý nhân sự (chưa làm)
-    private static void menu0_4(Scanner in){
+    private static void menu0_4(Scanner in) {
         System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,email): ");
         String keyword = in.nextLine();
         staffDAO.search(keyword);
@@ -570,19 +598,62 @@ public class adminAccount {
         System.out.println();
         for (int i = 0; i < infoUserList.size(); i++) {
             infoUser info = infoUserList.get(i);
-            int totalSalary =0;
-            if(info.getSalary_bonus() ==0){
+            int totalSalary = 0;
+            if (info.getSalary_bonus() == 0) {
                 totalSalary = info.getPosition_salary();
-            }else totalSalary = (info.getPosition_salary() + info.getSalary_bonus());
-            System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name(), info.getSalary_bonus());
+            } else totalSalary = (info.getPosition_salary() + info.getSalary_bonus());
+            System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary, info.getDepartment_name(), info.getSalary_bonus());
         }
-        if (infoUserList.size() ==0){
+        if (infoUserList.size() == 0) {
             System.out.println();
             System.out.println("Không có dữ liệu hợp lệ!");
             System.exit(0);
+        } else
+            System.out.print("\tNhập Mã nhân viên muốn kiểm tra: ");
+        String id = in.nextLine();
+        infoUser info2 = staffDAO.getInfoById(id);
+        System.out.printf("%-20s %-20s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Chức danh", "Tổng Lương");
+        System.out.println();
+        int totalSalary = 0;
+        if (info2.getSalary_bonus() == 0) {
+            totalSalary = info2.getPosition_salary();
+        } else totalSalary = (info2.getPosition_salary() + info2.getSalary_bonus());
+        System.out.printf("%-20s %-20s %-20s %-20d\n", info2.getStaff_id(), info2.getStaff_name(), info2.getPosition_name(), totalSalary);
+        DecimalFormat formatter = new DecimalFormat("###,###,###");
+        //Mức đóng: BHXH (8%), BHYT (1.5%), BHTN (1%)
+        double BH = (totalSalary * 0.08) + (totalSalary * 0.015) + (totalSalary * 0.01);
+        System.out.println("\t\tSố tiền bảo hiểm = " + formatter.format(BH));
+
+        // giảm trừ bản thân : 11000000
+        int GTBT = 11000000;
+
+        //Thu nhập được tính thuế = lương - BHBB - GTBT;
+        double TNTT = totalSalary - BH - GTBT;
+//        System.out.println("\t\tThu nhập tính thuế = " + formatter.format(TNTT));
+
+        // Thuế thu nhập cá nhân phải nộp
+        double TTNCN;
+        if (totalSalary <= 5000000) {
+            TTNCN = TNTT * 0.05;
+        } else if (totalSalary <= 10000000) {
+            TTNCN = (TNTT * 0.1) - 0.25;
+        } else if (totalSalary <= 18000000) {
+            TTNCN = (TNTT * 0.15) - 0.75;
+        } else if (totalSalary <= 32000000) {
+            TTNCN = (TNTT * 0.2) - 1.65;
+        } else if (totalSalary <= 52000000) {
+            TTNCN = (TNTT * 0.25) - 3.25;
+        } else if (totalSalary <= 80000000) {
+            TTNCN = (TNTT * 0.3) - 5.85;
+        } else {
+            TTNCN = (TNTT * 0.35) - 9.85;
+        }
+        if (TTNCN > 0) {
+            System.out.println("\tThuế thu nhập nhân viên phải nộp = " + formatter.format(TTNCN));
+        } else {
+            System.out.println("\tNhân viên không phải đóng thuế");
         }
     }
-
     public static void main(String username, String password) {
         Scanner in = new Scanner(System.in);
 
@@ -732,15 +803,14 @@ public class adminAccount {
                                     }
                                 } while (option3_3 != 0);
                                 break;
+                            case 4:
+                                // Thuế
+                                menu0_4(in);
+                                break;
                         }
                     } while (option3 != 0);
                     break;
-                case 4:
-                    // Thuế
-                    menu0_4(in);
-                    break;
             }
-
         } while (option != 0);
         in.close();
 

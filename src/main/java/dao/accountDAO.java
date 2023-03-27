@@ -79,7 +79,7 @@ public class accountDAO {
                         " left join `staff` b on a.`staff_id` = b.`staff_id`" +
                         " left join `position` c on b.`position_id` = c.`position_id`" +
                         " left join `department` d on b.`department_id` = d.`department_id`" +
-                        " WHERE a.`user` like '%" + keyword +"%' OR a.`staff_id` like '%" + keyword + "%' OR b.`staff_name` like '%" + keyword +"%'";
+                        " WHERE a.`user` like '%" + keyword +"%' OR a.`staff_id` like '%" + keyword + "%' OR b.`staff_name` like '%" + keyword +"%' AND b.`status` = 1";
 //               System.out.println(sql);
         List<infoUser> infoUserList = new ArrayList<>();
 
@@ -211,6 +211,7 @@ public class accountDAO {
                 " left join `staff` b on a.`staff_id` = b.`staff_id`" +
                 " left join `position` c on b.`position_id` = c.`position_id`" +
                 " left join `department` d on b.`department_id` = d.`department_id`" +
+                " WHERE b.`status` = 1" +
                 " ORDER BY account_id asc";
         System.out.println(sql);
         List<infoUser> infoUserList = new ArrayList<>();
@@ -245,5 +246,24 @@ public class accountDAO {
             e.printStackTrace();
         }
         return infoUserList;
+    }
+    public static void updateByUser(account acc, String user, String password) {
+        final String sql = String.format("UPDATE `java_quanlynhansu`.`account` SET `password` = '%s' WHERE (`user` = '%s' and `password` = '%s')",
+                acc.getPassword(), user, password
+        );
+//        System.out.println(sql);
+        try {
+            Connection conn = MyConnection.getConnection();
+            Statement stmt = conn.createStatement();
+            long rs = stmt.executeUpdate(sql);
+
+            if (rs == 0) {
+                System.out.println("Cập nhật thất bại");
+            } else System.out.println("Cập nhật thành công");
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

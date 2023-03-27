@@ -16,8 +16,9 @@ public class staffDAO {
                 " left join `position` c on b.`position_id` = c.`position_id`" +
                 " left join `department` d on b.`department_id` = d.`department_id`" +
                 " left join `bonus` e on b.`staff_id` = e.`staff_id`" +
-                " WHERE b.`staff_id` like '%" + keyword + "%' OR b.`staff_name` like '%" + keyword +"%' OR b.`phone` like '%" + keyword +"%' OR b.`email` like '%" + keyword +"%'" +
-                " ORDER BY staff_id asc";
+                " WHERE b.`staff_id` like '%" + keyword + "%' OR b.`staff_name` like '%" + keyword +"%' OR b.`phone` like '%" + keyword +"%' OR b.`email` like '%" + keyword +"%'" + "AND b.`status` = 1" +
+                " GROUP BY b.`staff_id`" +
+                " ORDER BY c.`position_salary` asc";
 //        System.out.println(sql);
         List<infoUser> infoUserList = new ArrayList<>();
 
@@ -49,13 +50,54 @@ public class staffDAO {
         }
         return infoUserList;
     }
+    public static infoUser getInfoById(String id) {
+        final String sql = "select b.`staff_id` as staff_id, b.`staff_name` as staff_name, b.`gender` as gender, b.`birthday` as birthday, b.`address` as address, b.`phone` as phone, b.`email` as email, c.`position_name` as position_name, c.`position_salary` as position_salary, sum(e.`salary_bonus`) as salary_bonus, d.`department_name` as department_name" +
+                " from `staff` b" +
+                " left join `position` c on b.`position_id` = c.`position_id`" +
+                " left join `department` d on b.`department_id` = d.`department_id`" +
+                " left join `bonus` e on b.`staff_id` = e.`staff_id`" +
+                " WHERE b.`staff_id` = '" + id + "'" + "AND b.`status` = 1" +
+                " GROUP BY b.`staff_id`" +
+                " ORDER BY c.`position_salary` asc";
+//        System.out.println(sql);
+        infoUser info = null;
+
+        try {
+            Connection conn = MyConnection.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                info = new infoUser();
+                info.setStaff_id(rs.getString("staff_id"));
+                info.setStaff_name(rs.getString("staff_name"));
+                info.setGender(rs.getInt("gender"));
+                info.setBirthday(rs.getString("birthday"));
+                info.setAddress(rs.getString("address"));
+                info.setPhone(rs.getString("phone"));
+                info.setEmail(rs.getString("email"));
+                info.setPosition_name(rs.getString("position_name"));
+                info.setPosition_salary(rs.getInt("position_salary"));
+                info.setSalary_bonus(rs.getInt("salary_bonus"));
+                info.setDepartment_name(rs.getString("department_name"));
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return info;
+    }
     public static List<infoUser> getAll() {
         final String sql = "select b.`staff_id` as staff_id, b.`staff_name` as staff_name, b.`gender` as gender, b.`birthday` as birthday, b.`address` as address, b.`phone` as phone, b.`email` as email, c.`position_name` as position_name, c.`position_salary` as position_salary, e.`salary_bonus` as salary_bonus, d.`department_name` as department_name" +
                 " from `staff` b" +
                 " left join `position` c on b.`position_id` = c.`position_id`" +
                 " left join `department` d on b.`department_id` = d.`department_id`" +
                 " left join `bonus` e on b.`staff_id` = e.`staff_id`" +
-                " ORDER BY staff_id asc";
+                " WHERE b.`status` = 1" +
+                " GROUP BY b.`staff_id`" +
+                " ORDER BY `position_salary` asc";
 //        System.out.println(sql);
         List<infoUser> infoUserList = new ArrayList<>();
 
@@ -109,7 +151,7 @@ public class staffDAO {
         }
     }
     public static staff getById(String id) {
-        final String sql = "SELECT * FROM `staff` WHERE  `staff_id` = " + "'" + id + "'";
+        final String sql = "SELECT * FROM `staff` WHERE  `staff_id` = " + "'" + id + "'" + "AND b.`status` = 1";
         staff staff = null;
 //       System.out.println(sql);
         try {
@@ -229,5 +271,47 @@ public class staffDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public static List<infoUser> getAllByAccount(String user, String password) {
+        final String sql = "select b.`staff_id` as staff_id, b.`staff_name` as staff_name, b.`gender` as gender, b.`birthday` as birthday, b.`address` as address, b.`phone` as phone, b.`email` as email, c.`position_name` as position_name, c.`position_salary` as position_salary, e.`salary_bonus` as salary_bonus, d.`department_name` as department_name" +
+                " from `staff` b" +
+                " left join `account` a on a.`staff_id` = b.`staff_id`" +
+                " left join `position` c on b.`position_id` = c.`position_id`" +
+                " left join `department` d on b.`department_id` = d.`department_id`" +
+                " left join `bonus` e on b.`staff_id` = e.`staff_id`" +
+                " WHERE b.`status` = 1 AND b.`department_id` = " +
+                " (select `department_id` from `staff` where `staff_id` =" +
+                " (select `staff_id` from `account` WHERE `user`= '" + user + "' AND `password`='" + password + "'))" +
+                " ORDER BY c.`position_salary` asc";
+//           System.out.println(sql);
+        List<infoUser> infoUserList = new ArrayList<>();
+
+        try {
+            Connection conn = MyConnection.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                infoUser info = new infoUser();
+                info.setStaff_id(rs.getString("staff_id"));
+                info.setStaff_name(rs.getString("staff_name"));
+                info.setGender(rs.getInt("gender"));
+                info.setBirthday(rs.getString("birthday"));
+                info.setAddress(rs.getString("address"));
+                info.setPhone(rs.getString("phone"));
+                info.setEmail(rs.getString("email"));
+                info.setPosition_name(rs.getString("position_name"));
+                info.setPosition_salary(rs.getInt("position_salary"));
+                info.setSalary_bonus(rs.getInt("salary_bonus"));
+                info.setDepartment_name(rs.getString("department_name"));
+                infoUserList.add(info);
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return infoUserList;
     }
 }
