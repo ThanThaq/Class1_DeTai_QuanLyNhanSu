@@ -240,7 +240,7 @@ public class adminAccount {
 
     // Cập nhật thông tin nhân viên - Quản lý thông tin nhân viên - Quản lý nhân sự
     public static void menu2_3(Scanner in){
-        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,email): ");
+        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,phòng ban): ");
         String keyword = in.nextLine();
         staffDAO.search(keyword);
         List<infoUser> infoUserList = staffDAO.search(keyword);
@@ -291,7 +291,7 @@ public class adminAccount {
 
     // Chuyển phòng ban, trạng thái nhân viên - Quản lý thông tin nhân viên - Quản lý nhân sự
     public static void menu2_4(Scanner in){
-        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,email): ");
+        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,phòng ban): ");
         String keyword = in.nextLine();
         staffDAO.search(keyword);
         List<infoUser> infoUserList = staffDAO.search(keyword);
@@ -355,7 +355,7 @@ public class adminAccount {
 
     //Thay đổi chức danh - Quản lý thông tin nhân viên - Quản lý nhân sự
     public static void menu2_5(Scanner in){
-        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,email): ");
+        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,phòng ban): ");
         String keyword = in.nextLine();
         staffDAO.search(keyword);
         List<infoUser> infoUserList = staffDAO.search(keyword);
@@ -415,7 +415,7 @@ public class adminAccount {
 
     //Thưởng - Quản lý thông tin nhân viên - Quản lý nhân sự
     public static void menu2_6(Scanner in){
-        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,email): ");
+        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,phòng ban): ");
         String keyword = in.nextLine();
         staffDAO.search(keyword);
         List<infoUser> infoUserList = staffDAO.search(keyword);
@@ -466,7 +466,7 @@ public class adminAccount {
 
     // Xóa nhân viên - Quản lý thông tin nhân viên - Quản lý nhân sự
     private static void menu2_7(Scanner in){
-        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,email): ");
+        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,phòng ban): ");
         String keyword = in.nextLine();
         staffDAO.search(keyword);
         List<infoUser> infoUserList = staffDAO.search(keyword);

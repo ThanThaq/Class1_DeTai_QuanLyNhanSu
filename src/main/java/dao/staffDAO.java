@@ -16,10 +16,10 @@ public class staffDAO {
                 " left join `position` c on b.`position_id` = c.`position_id`" +
                 " left join `department` d on b.`department_id` = d.`department_id`" +
                 " left join `bonus` e on b.`staff_id` = e.`staff_id`" +
-                " WHERE b.`staff_id` like '%" + keyword + "%' OR b.`staff_name` like '%" + keyword +"%' OR b.`phone` like '%" + keyword +"%' OR b.`email` like '%" + keyword +"%'" + "AND b.`status` = 1" +
+                " WHERE b.`staff_id` like '%" + keyword + "%' OR b.`staff_name` like '%" + keyword +"%' OR b.`phone` like '%" + keyword +"%' OR d.`department_name` like '%" + keyword +"%'" + "AND b.`status` = 1" +
                 " GROUP BY b.`staff_id`" +
-                " ORDER BY c.`position_salary` asc";
-//        System.out.println(sql);
+                " ORDER BY c.`position_salary` desc";
+        System.out.println(sql);
         List<infoUser> infoUserList = new ArrayList<>();
 
         try {
