@@ -19,7 +19,7 @@ public class staffDAO {
                 " WHERE b.`staff_id` like '%" + keyword + "%' OR b.`staff_name` like '%" + keyword +"%' OR b.`phone` like '%" + keyword +"%' OR d.`department_name` like '%" + keyword +"%'" + "AND b.`status` = 1" +
                 " GROUP BY b.`staff_id`" +
                 " ORDER BY c.`position_salary` desc";
-        System.out.println(sql);
+//        System.out.println(sql);
         List<infoUser> infoUserList = new ArrayList<>();
 
         try {
@@ -151,7 +151,7 @@ public class staffDAO {
         }
     }
     public static staff getById(String id) {
-        final String sql = "SELECT * FROM `staff` WHERE  `staff_id` = " + "'" + id + "'" + "AND b.`status` = 1";
+        final String sql = "SELECT * FROM `staff` WHERE  `staff_id` = " + "'" + id + "'" + "AND `status` = 1";
         staff staff = null;
 //       System.out.println(sql);
         try {
