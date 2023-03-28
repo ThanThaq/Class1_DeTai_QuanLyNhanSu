@@ -10,7 +10,7 @@ import java.util.List;
 
 public class positionDAO {
     public static List<position> getAll() {
-        final String sql = "SELECT * FROM `position`";
+        final String sql = "SELECT * FROM `position` ORDER BY  `position_salary`";
 
         List<position> positionList = new ArrayList<>();
 

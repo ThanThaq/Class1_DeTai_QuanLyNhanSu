@@ -158,7 +158,7 @@ public class departmentDAO {
         }
     }
     public static List<department> getAllNotIn(String id) {
-        final String sql = "SELECT * FROM java_quanlynhansu.department where department_id not in(select department_id from staff where position_id = 'Manager' and staff_id = " + "'" + id + "')";
+        final String sql = "SELECT * FROM java_quanlynhansu.department where department_id not in (select department_id from staff where position_id = 'Manager')  and department_id not in(select department_id from staff where staff_id = " + "'" + id + "')";
 //        System.out.println(sql);
         List<department> departmentList = new ArrayList<>();
         try {

@@ -213,7 +213,7 @@ public class accountDAO {
                 " left join `department` d on b.`department_id` = d.`department_id`" +
                 " WHERE b.`status` = 1" +
                 " ORDER BY account_id asc";
-        System.out.println(sql);
+//        System.out.println(sql);
         List<infoUser> infoUserList = new ArrayList<>();
 
         try {

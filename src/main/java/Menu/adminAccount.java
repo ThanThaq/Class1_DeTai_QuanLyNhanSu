@@ -80,6 +80,8 @@ public class adminAccount {
         System.out.print("\tNhập mã nhân viên: ");
         acc.setStaff_id(in.nextLine());
         System.out.print("\tNhập quyền hạn: ");
+        System.out.println("\n\t\t0-Nhân viên");
+        System.out.println("\t\t1-Admin");
         acc.setPermission(Integer.parseInt(in.nextLine()));
 
         accountDAO.insert(acc);
@@ -113,6 +115,8 @@ public class adminAccount {
         System.out.print("\tCập nhật mã nhân viên: ");
         acc.setStaff_id(in.nextLine());
         System.out.print("\tCập nhật quyền hạn: ");
+        System.out.println("\n\t\t0-Nhân viên");
+        System.out.println("\t\t1-Admin");
         acc.setPermission(Integer.parseInt(in.nextLine()));
         accountDAO.update(acc,id);
         //In ra
@@ -151,11 +155,11 @@ public class adminAccount {
 
     // Tìm kiếm - Quản lý nhân sự - Menu Login có quyền
     private static void mainMenu_1(Scanner in){
-        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,email): ");
+        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,phòng ban): ");
         String keyword = in.nextLine();
         staffDAO.search(keyword);
         List<infoUser> infoUserList = staffDAO.search(keyword);
-        System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban");
+        System.out.printf("%-15s %-20s %-10s %-15s %-10s %-20s %-20s %-20s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban");
         System.out.println();
         for (int i = 0; i < infoUserList.size(); i++) {
             infoUser info = infoUserList.get(i);
@@ -163,7 +167,7 @@ public class adminAccount {
             if(info.getSalary_bonus() ==0){
                 totalSalary = info.getPosition_salary();
             }else totalSalary = (info.getPosition_salary() + info.getSalary_bonus());
-            System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20d %-20s\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name());
+            System.out.printf("%-15s %-20s %-10s %-15s %-10s %-20s %-20s %-20s %-20d %-20s\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name());
         };
         if (infoUserList.size() ==0){
             System.out.println();
@@ -175,7 +179,7 @@ public class adminAccount {
     // Danh sách nhân viên - Quản lý thông tin nhân viên - Quản lý nhân sự
     private static void menu2_1(){
         List<infoUser> infoUserList = staffDAO.getAll();
-        System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban", "Thưởng");
+        System.out.printf("%-15s %-20s %-10s %-15s %-10s %-15s %-20s %-20s %-10s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban", "Thưởng");
         System.out.println();
         for (int i = 0; i < infoUserList.size(); i++) {
             infoUser info = infoUserList.get(i);
@@ -183,7 +187,7 @@ public class adminAccount {
             if(info.getSalary_bonus() ==0){
                 totalSalary = info.getPosition_salary();
             }else totalSalary = (info.getPosition_salary() + info.getSalary_bonus());
-            System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name(), info.getSalary_bonus());
+            System.out.printf("%-15s %-20s %-10s %-15s %-10s %-15s %-20s %-20s %-10d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name(), info.getSalary_bonus());
         };
     }
 
@@ -226,10 +230,6 @@ public class adminAccount {
         // Tam thoi nhap chinh xac
         System.out.print("\tNhập mã phòng ban: ");
         staff.setDepartment_id(in.nextLine());
-        System.out.print("\tNhập trạng thái đi làm: ");
-        System.out.println("\n\t\t0-Đã nghỉ");
-        System.out.println("\t\t1-Đang đi làm");
-        staff.setStatus(Integer.parseInt(in.nextLine()));
 
         staffDAO.insert(staff);
         System.out.println("Thông tin nhân viên vừa thêm:");
@@ -244,7 +244,7 @@ public class adminAccount {
         String keyword = in.nextLine();
         staffDAO.search(keyword);
         List<infoUser> infoUserList = staffDAO.search(keyword);
-        System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban", "Thưởng");
+        System.out.printf("%-15s %-20s %-10s %-15s %-10s %-15s %-20s %-20s %-10s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban", "Thưởng");
         System.out.println();
         for (int i = 0; i < infoUserList.size(); i++) {
             infoUser info = infoUserList.get(i);
@@ -252,8 +252,8 @@ public class adminAccount {
             if(info.getSalary_bonus() ==0){
                 totalSalary = info.getPosition_salary();
             }else totalSalary = (info.getPosition_salary() + info.getSalary_bonus());
-            System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name(), info.getSalary_bonus());
-        }
+            System.out.printf("%-15s %-20s %-10s %-15s %-10s %-15s %-20s %-20s %-10d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name(), info.getSalary_bonus());
+        };
         if (infoUserList.size() ==0){
             System.out.println();
             System.out.println("Không có dữ liệu hợp lệ!");
@@ -286,7 +286,7 @@ public class adminAccount {
         System.out.println("Thông tin nhân viên vừa cập nhật:");
         System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email");
         System.out.println();
-        System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s\n", staff.getStaff_id(), staff.getStaff_name(), staff.getGender(), staff.getBirthday(), staff.getAddress(), staff.getPhone(), staff.getEmail());
+        System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s\n", s.getStaff_id(), staff.getStaff_name(), staff.getGender(), staff.getBirthday(), staff.getAddress(), staff.getPhone(), staff.getEmail());
     }
 
     // Chuyển phòng ban, trạng thái nhân viên - Quản lý thông tin nhân viên - Quản lý nhân sự
@@ -295,7 +295,7 @@ public class adminAccount {
         String keyword = in.nextLine();
         staffDAO.search(keyword);
         List<infoUser> infoUserList = staffDAO.search(keyword);
-        System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban", "Thưởng");
+        System.out.printf("%-10s %-20s %-10s %-15s %-10s %-15s %-20s %-20s %-10s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban", "Thưởng");
         System.out.println();
         for (int i = 0; i < infoUserList.size(); i++) {
             infoUser info = infoUserList.get(i);
@@ -303,7 +303,7 @@ public class adminAccount {
             if(info.getSalary_bonus() ==0){
                 totalSalary = info.getPosition_salary();
             }else totalSalary = (info.getPosition_salary() + info.getSalary_bonus());
-            System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name(), info.getSalary_bonus());
+            System.out.printf("%-10s %-20s %-10s %-15s %-10s %-15s %-20s %-20s %-10d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name(), info.getSalary_bonus());
         }
         if (infoUserList.size() ==0){
             System.out.println();
@@ -313,9 +313,9 @@ public class adminAccount {
             System.out.print("\tNhập Mã nhân viên muốn cập nhật: ");
         String id = in.nextLine();
         staff s = staffDAO.getById(id);
-        System.out.printf("%-20s %-20s %-20s %-30s", "Mã nhân viên", "Tên nhân viên", "Phòng ban", "Trạng thái làm việc");
+        System.out.printf("%-15s %-20s %-20s %-20s %-30s", "Mã nhân viên", "Tên nhân viên", "Chức danh", "Phòng ban", "Trạng thái làm việc");
         System.out.println();
-        System.out.printf("%-20s %-20s %-20s %-30s\n", s.getStaff_id(), s.getStaff_name(), s.getDepartment_id(), s.getStatus());
+        System.out.printf("%-15s %-20s %-20s %-20s %-30s\n", s.getStaff_id(), s.getStaff_name(), s.getPosition_id(), s.getDepartment_id(), s.getStatus());
 
         staff staff = new staff();
         System.out.print("\tPhòng ban: \n");
@@ -348,9 +348,9 @@ public class adminAccount {
         staffDAO.updateDepart(staff,id);
         //In ra
         System.out.println("Thông tin nhân viên vừa cập nhật:");
-        System.out.printf("%-20s %-20s %-20s %-30s", "Mã nhân viên", "Tên nhân viên", "Phòng ban", "Trạng thái làm việc");
+        System.out.printf("%-15s %-20s %-20s %-20s %-30s", "Mã nhân viên", "Tên nhân viên", "Chức danh", "Phòng ban", "Trạng thái làm việc");
         System.out.println();
-        System.out.printf("%-20s %-20s %-20s %-30s\n", staff.getStaff_id(), staff.getStaff_name(), staff.getDepartment_id(), staff.getStatus());
+        System.out.printf("%-15s %-20s %-20s %-20s %-30s\n", s.getStaff_id(), s.getStaff_name(), s.getPosition_id(), staff.getDepartment_id(), staff.getStatus());
     }
 
     //Thay đổi chức danh - Quản lý thông tin nhân viên - Quản lý nhân sự
@@ -359,7 +359,7 @@ public class adminAccount {
         String keyword = in.nextLine();
         staffDAO.search(keyword);
         List<infoUser> infoUserList = staffDAO.search(keyword);
-        System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban", "Thưởng");
+        System.out.printf("%-10s %-20s %-10s %-15s %-10s %-20s %-20s %-20s %-10s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban", "Thưởng");
         System.out.println();
         for (int i = 0; i < infoUserList.size(); i++) {
             infoUser info = infoUserList.get(i);
@@ -367,7 +367,7 @@ public class adminAccount {
             if(info.getSalary_bonus() ==0){
                 totalSalary = info.getPosition_salary();
             }else totalSalary = (info.getPosition_salary() + info.getSalary_bonus());
-            System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name(), info.getSalary_bonus());
+            System.out.printf("%-10s %-20s %-10s %-15s %-10s %-20s %-20s %-20s %-10d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name(), info.getSalary_bonus());
         }
         if (infoUserList.size() ==0){
             System.out.println();
@@ -470,7 +470,7 @@ public class adminAccount {
         String keyword = in.nextLine();
         staffDAO.search(keyword);
         List<infoUser> infoUserList = staffDAO.search(keyword);
-        System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban", "Thưởng");
+        System.out.printf("%-20s %-20s %-10s %-15s %-10s %-15s %-15s %-20s %-10s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban", "Thưởng");
         System.out.println();
         for (int i = 0; i < infoUserList.size(); i++) {
             infoUser info = infoUserList.get(i);
@@ -478,7 +478,7 @@ public class adminAccount {
             if(info.getSalary_bonus() ==0){
                 totalSalary = info.getPosition_salary();
             }else totalSalary = (info.getPosition_salary() + info.getSalary_bonus());
-            System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name(), info.getSalary_bonus());
+            System.out.printf("%-20s %-20s %-10s %-15s %-10s %-15s %-15s %-20s %-10d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary,info.getDepartment_name(), info.getSalary_bonus());
         }
         if (infoUserList.size() ==0){
             System.out.println();
@@ -487,6 +487,7 @@ public class adminAccount {
         }else
             System.out.println("Nhập Mã nhân viên muốn xóa: ");
         String id = in.nextLine();
+        bonusDAO.delete(id);
         staffDAO.delete(id);
         List<infoUser> infoUserList1 = staffDAO.getAll();
         System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban", "Thưởng");
@@ -556,7 +557,7 @@ public class adminAccount {
         System.out.println("Thông tin phòng ban vừa cập nhật:");
         System.out.printf("%-20s %-20s %-20s %-20s", "Mã phòng ban", "Tên phòng ban", "Số điện thoại", "Địa chỉ");
         System.out.println();
-        System.out.printf("%-20s %-20s %-20s %-20s\n", depart1.getDepartment_id(), depart1.getDepartment_name(), depart1.getDepartment_phone(), depart1.getDepartment_adress());
+        System.out.printf("%-20s %-20s %-20s %-20s\n", depart.getDepartment_id(), depart1.getDepartment_name(), depart1.getDepartment_phone(), depart1.getDepartment_adress());
     }
 
     // Xóa phòng ban - Quản lý phòng ban - Quản lý nhân sự
@@ -578,6 +579,7 @@ public class adminAccount {
         }else
             System.out.print("\tNhập Mã phòng ban muốn xóa: ");
         String id = in.nextLine();
+        staffDAO.updatePBNull(id);
         departmentDAO.delete(id);
         List<department> departmentList1 = departmentDAO.getAll();
         System.out.printf("%-20s %-20s %-20s %-20s", "Mã phòng ban", "Tên phòng ban", "Số điện thoại", "Địa chỉ");
@@ -590,11 +592,11 @@ public class adminAccount {
 
     // Tính thuế - Quản lý nhân sự (chưa làm)
     private static void menu0_4(Scanner in) {
-        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,email): ");
+        System.out.println("\tNhập từ khóa tìm kiếm(staff_id,staff_name,phone,phòng ban): ");
         String keyword = in.nextLine();
         staffDAO.search(keyword);
         List<infoUser> infoUserList = staffDAO.search(keyword);
-        System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày Sinh", "Địa chỉ", "Số điện thoại", "Email", "Chức danh", "Lương", "Phòng ban", "Thưởng");
+        System.out.printf("%-20s %-20s %-20s %-20s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Số điện thoại","Chức danh", "Lương", "Thuế");
         System.out.println();
         for (int i = 0; i < infoUserList.size(); i++) {
             infoUser info = infoUserList.get(i);
@@ -602,56 +604,34 @@ public class adminAccount {
             if (info.getSalary_bonus() == 0) {
                 totalSalary = info.getPosition_salary();
             } else totalSalary = (info.getPosition_salary() + info.getSalary_bonus());
-            System.out.printf("%-20s %-20s %-20s %-20s %-10s %-20s %-20s %-20s %-20d %-20s %-20d\n", info.getStaff_id(), info.getStaff_name(), info.getGender(), info.getBirthday(), info.getAddress(), info.getPhone(), info.getEmail(), info.getPosition_name(), totalSalary, info.getDepartment_name(), info.getSalary_bonus());
+            DecimalFormat formatter = new DecimalFormat("###,###,###");
+            double BH = (totalSalary * 0.08) + (totalSalary * 0.015) + (totalSalary * 0.01);
+            double TNTT = totalSalary - BH - 11000000;
+            double TTNCN;
+            if (totalSalary <= 5000000) {
+                TTNCN = TNTT * 0.05;
+            } else if (totalSalary <= 10000000) {
+                TTNCN = (TNTT * 0.1) - 0.25;
+            } else if (totalSalary <= 18000000) {
+                TTNCN = (TNTT * 0.15) - 0.75;
+            } else if (totalSalary <= 32000000) {
+                TTNCN = (TNTT * 0.2) - 1.65;
+            } else if (totalSalary <= 52000000) {
+                TTNCN = (TNTT * 0.25) - 3.25;
+            } else if (totalSalary <= 80000000) {
+                TTNCN = (TNTT * 0.3) - 5.85;
+            } else {
+                TTNCN = (TNTT * 0.35) - 9.85;
+            }
+            if (TTNCN <= 0) {
+                TTNCN = 0;
+            }
+            System.out.printf("%-20s %-20s %-20s %-20s %-20s %-20s\n", info.getStaff_id(), info.getStaff_name(), info.getPhone(), info.getPosition_name(), formatter.format(totalSalary),formatter.format(TTNCN));
         }
         if (infoUserList.size() == 0) {
             System.out.println();
             System.out.println("Không có dữ liệu hợp lệ!");
             System.exit(0);
-        } else
-            System.out.print("\tNhập Mã nhân viên muốn kiểm tra: ");
-        String id = in.nextLine();
-        infoUser info2 = staffDAO.getInfoById(id);
-        System.out.printf("%-20s %-20s %-20s %-20s", "Mã nhân viên", "Tên nhân viên", "Chức danh", "Tổng Lương");
-        System.out.println();
-        int totalSalary = 0;
-        if (info2.getSalary_bonus() == 0) {
-            totalSalary = info2.getPosition_salary();
-        } else totalSalary = (info2.getPosition_salary() + info2.getSalary_bonus());
-        System.out.printf("%-20s %-20s %-20s %-20d\n", info2.getStaff_id(), info2.getStaff_name(), info2.getPosition_name(), totalSalary);
-        DecimalFormat formatter = new DecimalFormat("###,###,###");
-        //Mức đóng: BHXH (8%), BHYT (1.5%), BHTN (1%)
-        double BH = (totalSalary * 0.08) + (totalSalary * 0.015) + (totalSalary * 0.01);
-        System.out.println("\t\tSố tiền bảo hiểm = " + formatter.format(BH));
-
-        // giảm trừ bản thân : 11000000
-        int GTBT = 11000000;
-
-        //Thu nhập được tính thuế = lương - BHBB - GTBT;
-        double TNTT = totalSalary - BH - GTBT;
-//        System.out.println("\t\tThu nhập tính thuế = " + formatter.format(TNTT));
-
-        // Thuế thu nhập cá nhân phải nộp
-        double TTNCN;
-        if (totalSalary <= 5000000) {
-            TTNCN = TNTT * 0.05;
-        } else if (totalSalary <= 10000000) {
-            TTNCN = (TNTT * 0.1) - 0.25;
-        } else if (totalSalary <= 18000000) {
-            TTNCN = (TNTT * 0.15) - 0.75;
-        } else if (totalSalary <= 32000000) {
-            TTNCN = (TNTT * 0.2) - 1.65;
-        } else if (totalSalary <= 52000000) {
-            TTNCN = (TNTT * 0.25) - 3.25;
-        } else if (totalSalary <= 80000000) {
-            TTNCN = (TNTT * 0.3) - 5.85;
-        } else {
-            TTNCN = (TNTT * 0.35) - 9.85;
-        }
-        if (TTNCN > 0) {
-            System.out.println("\tThuế thu nhập nhân viên phải nộp = " + formatter.format(TTNCN));
-        } else {
-            System.out.println("\tNhân viên không phải đóng thuế");
         }
     }
     public static void main(String username, String password) {

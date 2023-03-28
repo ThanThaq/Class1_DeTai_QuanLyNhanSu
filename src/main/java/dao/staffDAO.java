@@ -90,7 +90,7 @@ public class staffDAO {
         return info;
     }
     public static List<infoUser> getAll() {
-        final String sql = "select b.`staff_id` as staff_id, b.`staff_name` as staff_name, b.`gender` as gender, b.`birthday` as birthday, b.`address` as address, b.`phone` as phone, b.`email` as email, c.`position_name` as position_name, c.`position_salary` as position_salary, e.`salary_bonus` as salary_bonus, d.`department_name` as department_name" +
+        final String sql = "select b.`staff_id` as staff_id, b.`staff_name` as staff_name, b.`gender` as gender, b.`birthday` as birthday, b.`address` as address, b.`phone` as phone, b.`email` as email, c.`position_name` as position_name, c.`position_salary` as position_salary, sum(e.`salary_bonus`) as salary_bonus, d.`department_name` as department_name" +
                 " from `staff` b" +
                 " left join `position` c on b.`position_id` = c.`position_id`" +
                 " left join `department` d on b.`department_id` = d.`department_id`" +
@@ -257,7 +257,7 @@ public class staffDAO {
             throw new RuntimeException("Không tồn tại nhân viên này này!");
         }
         final String sql = "DELETE FROM `staff` WHERE  `staff_id` = " + "'" + id + "'";
-        System.out.println(sql);
+//        System.out.println(sql);
         try {
             Connection conn = MyConnection.getConnection();
             Statement stmt = conn.createStatement();
@@ -313,5 +313,19 @@ public class staffDAO {
             e.printStackTrace();
         }
         return infoUserList;
+    }
+    public static void updatePBNull(String id) {
+        final String sql = "UPDATE `staff` SET `department_id` = null WHERE (`department_id` ='" + id + "')";
+//        System.out.println(sql);
+        try {
+            Connection conn = MyConnection.getConnection();
+            Statement stmt = conn.createStatement();
+            long rs = stmt.executeUpdate(sql);
+
+            stmt.close();
+            conn.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

@@ -68,4 +68,45 @@ public class bonusDAO {
         }
         return info;
     }
+    public static bonus getById(String id) {
+        final String sql = "SELECT * FROM `bonus` WHERE  `staff_id` = " + "'" + id + "'";
+        bonus bonus = null;
+//       System.out.println(sql);
+        try {
+            Connection conn = MyConnection.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                bonus = new bonus();
+                bonus.setBonus_id(rs.getInt("bonus_id"));
+                bonus.setStaff_id(rs.getString("staff_id"));
+                bonus.setSalary_bonus(rs.getInt("salary_bonus"));
+                bonus.setBonus_describe(rs.getString("bonus_describe"));
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bonus;
+    }
+    public static void delete(String id) {
+        bonus tmp= getById(id);
+        if (tmp == null) {
+            throw new RuntimeException("Nhân viên chưa có thưởng!");
+        }
+        final String sql = "DELETE FROM `bonus` WHERE  `staff_id` = " + "'" + id + "'";
+//        System.out.println(sql);
+        try {
+            Connection conn = MyConnection.getConnection();
+            Statement stmt = conn.createStatement();
+            long rs = stmt.executeUpdate(sql);
+
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
